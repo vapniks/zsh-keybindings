@@ -135,8 +135,11 @@ case "${TERMINAL_EMULATOR}"
 in
     xterm)
 	echo "Running zsh under xterm"
-	if [[ "$(appres XTerm.VT100 xterm.vt100 -1|grep metaSendsEscape|head -1|awk '{print $2}')" != true ]]; then
-	    keys[altbackspace]='ÿ'
+	keys[altbackspace]='ÿ'
+	if [[ $(whence appres) ]]; then
+	    if [[ "$(appres XTerm.VT100 xterm.vt100 -1|grep metaSendsEscape|head -1|awk '{print $2}')" == true ]]; then
+		keys[altbackspace]="^[^?"
+	    fi
 	fi
 	keys[altenter]=''
 	keys[shiftpgup]=''
