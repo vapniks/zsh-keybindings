@@ -122,14 +122,17 @@ setkey2st        ctrlaltup         "\e[1;7A"
 setkey2st        ctrlaltdown       "\e[1;7B"
 setkey2st        ctrlaltright      "\e[1;7C"
 
-## Work out what terminal emulator we are using
-TERMINAL_EMULATOR="$(ps --pid $(ps --pid $$ -o ppid=) -o comm=)"
-if [[ "${TERMINAL_EMULATOR}" =~ tmux ]]; then
-    export TERMINAL_EMULATOR=${${$(ps --pid "$(($(ps --pid $(ps --pid $(tmux display-message -p "#{client_pid}") -o sid=) -o ppid=)))" -o comm=)## #}%% #}
-else
-    export TERMINAL_EMULATOR
+## Work out what terminal emulator we are using if its not already known
+# (this will not work with busybox version of ps. You must set $TERMINAL_EMULATOR beforehand in that case).
+if [[ -z ${TERMINAL_EMULATOR} && -z $(ps --help|& grep BusyBox) ]]; then
+    TERMINAL_EMULATOR="$(ps --pid $(ps --pid $$ -o ppid=) -o comm=)"
+    if [[ "${TERMINAL_EMULATOR}" =~ tmux ]]; then
+	export TERMINAL_EMULATOR=${${$(ps --pid "$(($(ps --pid $(ps --pid $(tmux display-message -p "#{client_pid}") -o sid=) -o ppid=)))" -o comm=)## #}%% #}
+    else
+        export TERMINAL_EMULATOR
+    fi
 fi
-
+				 
 ## Set deviations from default key codes, for different terminal emulators 
 case "${TERMINAL_EMULATOR}"
 in
