@@ -137,7 +137,7 @@ fi
 case "${TERMINAL_EMULATOR}"
 in
     xterm)
-	echo "Running zsh under xterm"
+	echo "Running zsh ${ZSH_VERSION} under xterm"
 	keys[altbackspace]='ÿ'
 	if [[ $(whence appres) ]]; then
 	    if [[ "$(appres XTerm.VT100 xterm.vt100 -1|grep metaSendsEscape|head -1|awk '{print $2}')" == true ]]; then
@@ -149,7 +149,7 @@ in
 	keys[shiftpgdown]=''
 	;;
     guake)
-	echo "Running zsh under guake"
+	echo "Running zsh ${ZSH_VERSION} under guake"
 	keys[altleft]='\eb'
 	keys[altright]='\ef'
 	keys[ctrlleft]='\eb'
@@ -170,7 +170,7 @@ in
 	keys[ctrlaltinsert]=''
 	;;
     gnome-terminal)
-	echo "Running zsh under gnome-terminal"
+	echo "Running zsh ${ZSH_VERSION} under gnome-terminal"
 	keys[ctrlinsert]=''
 	keys[shiftpgup]=''
 	keys[shiftpgdown]=''
