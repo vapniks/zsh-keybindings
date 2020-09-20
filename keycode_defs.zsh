@@ -3,7 +3,8 @@
 ## This file contains the definition of a "keys" assoc array associating key names with key codes which can then be used with
 # bindkey, e.g: bindkey ${keys[altbackspace]} backward-kill-word
 # Some terminal emulators emit different key codes or no key codes for some keys. These differences from the defaults can be
-# set at the end of this file. The name of the terminal emulator will be exported in ${TERMINAL_EMULATOR}.
+# set at the end of this file. The name of the terminal emulator will be stored in ${TERMINAL_EMULATOR}. Do not export this
+# variable unless you are sure you won't be starting any different terminal emulators from the current shell.
 # The definitions assume that you have a ${terminfo[@]} assoc array set.
 # The terminfo key code names can be found in the terminfo manpage.
 # Note: by default xterm treats the Alt key as a modifier for inserting ligatures, diacritics or other unusual letters & symbols.
@@ -123,34 +124,29 @@ setkey2st        ctrlaltleft       "\e[1;7D"
 setkey2st        ctrlaltup         "\e[1;7A"
 setkey2st        ctrlaltdown       "\e[1;7B"
 setkey2st        ctrlaltright      "\e[1;7C"
-
 ## Work out what terminal emulator we are using if its not already known
 # (this will not work with busybox version of ps. You must set $TERMINAL_EMULATOR beforehand in that case).
 if [[ -z ${TERMINAL_EMULATOR} && -z $(ps --help|& grep BusyBox) ]]; then
-    TERMINAL_EMULATOR="$(ps --pid $PPID -o comm=)"
-    if [[ "${TERMINAL_EMULATOR}" =~ tmux ]]; then
-	export TERMINAL_EMULATOR=${${$(ps --pid "$(($(ps --pid $(ps --pid $(tmux display-message -p "#{client_pid}") -o sid=) -o ppid=)))" -o comm=)## #}%% #}
-    else
-        export TERMINAL_EMULATOR
-    fi
+    TERMINAL_EMULATOR=$(${0:h}/get_terminal.sh)
 fi
-				 
+# make sure this value of $TERMINAL_EMULATOR isn't exported to other terminals
+typeset +x TERMINAL_EMULATOR
 ## Set deviations from default key codes, for different terminal emulators 
 case "${TERMINAL_EMULATOR}"
 in
-    xterm)
+    *xterm*)
 	echo "Running zsh ${ZSH_VERSION} under xterm"
 	keys[altbackspace]='ÿ'
-	if [[ $(whence appres) ]]; then
-	    if [[ "$(appres XTerm.VT100 xterm.vt100 -1|grep metaSendsEscape|head -1|awk '{print $2}')" == true ]]; then
-		keys[altbackspace]="\e^?"
-	    fi
-	fi
+	# if [[ $(whence appres) ]]; then
+	#     if [[ "$(appres XTerm.VT100 xterm.vt100 -1|grep metaSendsEscape|head -1|awk '{print $2}')" == true ]]; then
+	# 	keys[altbackspace]="\e^?"
+	#     fi
+	# fi
 	keys[altenter]=''
 	keys[shiftpgup]=''
 	keys[shiftpgdown]=''
 	;;
-    guake)
+    *guake*)
 	echo "Running zsh ${ZSH_VERSION} under guake"
 	keys[altleft]='\eb'
 	keys[altright]='\ef'
@@ -171,7 +167,7 @@ in
 	keys[altf12]="\e\e[24~"
 	keys[ctrlaltinsert]=''
 	;;
-    gnome-terminal)
+    *gnome-terminal*)
 	echo "Running zsh ${ZSH_VERSION} under gnome-terminal"
 	keys[ctrlinsert]=''
 	keys[shiftpgup]=''
