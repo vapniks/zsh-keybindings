@@ -127,7 +127,7 @@ setkey2st        ctrlaltright      "\e[1;7C"
 ## Work out what terminal emulator we are using if its not already known
 # (this will not work with busybox version of ps. You must set $TERMINAL_EMULATOR beforehand in that case).
 if [[ -z ${TERMINAL_EMULATOR} && -z $(ps --help|& grep BusyBox) ]]; then
-    TERMINAL_EMULATOR=$(${0:h}/get_terminal.sh)
+    TERMINAL_EMULATOR=$(${0:h}/which-terminal-emulator)
 fi
 # make sure this value of $TERMINAL_EMULATOR isn't exported to other terminals
 typeset +x TERMINAL_EMULATOR

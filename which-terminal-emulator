@@ -1,5 +1,7 @@
 #!/bin/sh
 # Return the terminal emulator that this shell is running in
+# First half of code thanks to Gilles on stackexchange:
+#  https://unix.stackexchange.com/questions/170428/identify-whether-terminal-is-open-in-guake/610413#610413
 set -f
 pid=$PPID
 my_tty=$(ps -p $$ -o tty=)
