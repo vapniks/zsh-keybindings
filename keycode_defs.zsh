@@ -21,6 +21,7 @@ fi
 
 typeset -A keys
 ## Set default key codes from terminfo
+zmodload zsh/terminfo
 function setkey2ti() {
     keys[${1}]="${terminfo[${2}]}"
 }
