@@ -132,11 +132,11 @@ if [[ -z ${TERMINAL_EMULATOR} && -z $(ps --help|& grep BusyBox) ]]; then
 fi
 # make sure this value of $TERMINAL_EMULATOR isn't exported to other terminals
 typeset +x TERMINAL_EMULATOR
-## Set deviations from default key codes, for different terminal emulators 
+## Set deviations from default key codes, for different terminal emulators
+echo "Running zsh ${ZSH_VERSION} in ${TERMINAL_EMULATOR} terminal"
 case "${TERMINAL_EMULATOR}"
 in
     *xterm*)
-	echo "Running zsh ${ZSH_VERSION} under xterm"
 	keys[altbackspace]='ÿ'
 	# if [[ $(whence appres) ]]; then
 	#     if [[ "$(appres XTerm.VT100 xterm.vt100 -1|grep metaSendsEscape|head -1|awk '{print $2}')" == true ]]; then
@@ -148,7 +148,6 @@ in
 	keys[shiftpgdown]=''
 	;;
     *guake*)
-	echo "Running zsh ${ZSH_VERSION} under guake"
 	keys[altleft]='\eb'
 	keys[altright]='\ef'
 	keys[ctrlleft]='\eb'
@@ -169,10 +168,12 @@ in
 	keys[ctrlaltinsert]=''
 	;;
     *gnome-terminal*)
-	echo "Running zsh ${ZSH_VERSION} under gnome-terminal"
 	keys[ctrlinsert]=''
 	keys[shiftpgup]=''
 	keys[shiftpgdown]=''
 	keys[ctrlaltinsert]=''
+	;;
+    *kitty*)
+	# TODO
 	;;
 esac
