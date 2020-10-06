@@ -174,6 +174,17 @@ in
 	keys[ctrlaltinsert]=''
 	;;
     *kitty*)
-	# TODO
+	# Some keys combos are not detected by kitty by default.
+	# You need to map those key combos to keycodes in your kitty.conf file so that
+	# they are detected properly by zsh.
+	# To find the key names that kitty uses see the "Keyboard shortcuts" section of they
+	# kitty manual, here: https://sw.kovidgoyal.net/kitty/conf.html
+	# To find what keycodes to map to, in another terminal enter: showkeys -a
+	# followed by the keys you need codes for.
+	# In my case with a UK keyboard I've found the following mappings are necessary:
+	# map alt+0x23 send_text all \x1b\x23             (alt+#)
+	# map alt+shift+0x23 send_text all \x1b\x7e       (alt+~)
+	# map ctrl+alt+backspace send_text all \x1b\x08   (ctrl+alt+backspace)
+	kitty + complete setup zsh | source /dev/stdin
 	;;
 esac
